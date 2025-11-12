@@ -168,6 +168,7 @@
     }
 
     // === FUNCTION: checkCurriculumRequirements ===
+    // You can change CURRICULUM_REQUIREMENTS and COURSE_NAMES to adapt to different curricula
     function checkCurriculumRequirements(allSubjects) {
         const result = { generalEducation: { groups: {} }, majorCourses: { groups: {} }, freeElective: {} };
         const usedCourses = new Set();
@@ -175,7 +176,7 @@
 
         const getStatus = (earned, required, pending, missing) => {
             if (earned >= required) return 'passed';
-            if (missing.length === 0 && (earned + pending.reduce((sum, c) => sum + (parseInt(c.credit, 10) || 0), 0)) >= required) return 'pending';
+            if ((missing?.length ?? 0) === 0 && (earned + pending.reduce((sum, c) => sum + (parseInt(c.credit, 10) || 0), 0)) >= required) return 'pending';
             return 'failed';
         };
 
@@ -214,7 +215,7 @@
         });
 
         // General Elective (6 credits)
-        const genElecGroup = { name: genEdGroups.generalElective.name, required: 6, takenCourses: [], pendingCourses: [], earnedCredits: 0 };
+        const genElecGroup = { name: genEdGroups.generalElective.name, required: 6, takenCourses: [], pendingCourses: [], earnedCredits: 0, missingCourses: [] };
         let genElecNeeded = 6;
         allSubjects.filter(s => s.code.startsWith(genEdGroups.generalElective.prefix) && !usedCourses.has(s.code)).forEach(s => {
             if (genElecNeeded > 0) {
