@@ -324,7 +324,10 @@
         const totalPassedCredits = allSubjects.filter(s => isPassingGrade(s.grade)).reduce((sum, s) => sum + (parseInt(s.credit, 10) || 0), 0);
         const freeElectiveCredits = totalPassedCredits - totalCreditsUsedInRequirements;
         const freeReq = CURRICULUM_REQUIREMENTS.freeElective.required;
-        result.freeElective = { name: CURRICULUM_REQUIREMENTS.freeElective.name, required: freeReq, earned: freeElectiveCredits, status: freeElectiveCredits >= freeReq ? 'passed' : 'failed', remaining: Math.max(0, freeReq - freeElectiveCredits) };
+        const takenFreeElective = allSubjects.filter(
+            s => isPassingGrade(s.grade) && !usedCourses.has(s.code)
+        );
+        result.freeElective = { name: CURRICULUM_REQUIREMENTS.freeElective.name, required: freeReq, earned: freeElectiveCredits, status: freeElectiveCredits >= freeReq ? 'passed' : 'failed', remaining: Math.max(0, freeReq - freeElectiveCredits),takenCourses: takenFreeElective, };
 
         return result;
     }
