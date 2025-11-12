@@ -51,6 +51,12 @@
         rows.forEach(row => {
             const cells = Array.from(row.querySelectorAll('td'));
             const cellTexts = cells.map(cell => cell.textContent.trim());
+            cells.forEach(cell => {
+                const cumGpaMatch = cell.textContent.match(/Cumulative GPA:\s*([0-9.]+)/);
+                if (cumGpaMatch) {
+                    studentInfo.cumulativeGpa = cumGpaMatch[1];
+                }
+            });
             const isCourseCode = (code) => /^\d{8}$/.test(code);
 
             const leftHeaderCell = cells[0];
@@ -335,6 +341,7 @@
     // === HTML Generation Functions ===
     function createPopupHTML(data) {
         const semestersByYear = {};
+        const gpaText = data.studentInfo.cumulativeGpa ? data.studentInfo.cumulativeGpa : '-';
         Object.keys(data.semesterData).forEach(semesterTitle => {
             const match = semesterTitle.match(/Semester, Year (\d+)/i);
             if (match) {
@@ -532,10 +539,14 @@
                         <p><strong>รหัสนักศึกษา:</strong> ${data.studentInfo.id || 'N/A'} | <strong>สาขาวิชา:</strong> ${data.studentInfo.major || 'N/A'}</p>
                     </div>
                     <div class="summary-cards">
-                        <div class="card"><div class="card-title">หน่วยกิตทั้งหมด</div><div class="card-value">${data.totalAllCredits}</div></div>
-                        <div class="card"><div class="card-title">หน่วยกิตที่เรียน</div><div class="card-value">${data.totalCredits}</div></div>
-                        <div class="card"><div class="card-title">คงเหลือ</div><div class="card-value">${data.remaining}</div></div>
+                        <div class="card"><div class="card-title">หน่วยกิตทั้งหมด</div><div class="card-value">${data.totalAllCredits}</div>
+                        <div style="font-size:0.8em;color:#888;">(ไม่นับวิชาที่เกรดยังไม่ออก)</div></div>
+                        <div class="card"><div class="card-title">หน่วยกิตคงเหลือ</div><div class="card-value">${data.remaining}</div></div>
                         <div class="card"><div class="card-title">ความคืบหน้า</div><div class="card-value">${data.progress}%</div></div>
+                        <div class="card">
+                            <div class="card-title">เกรดเฉลี่ย (GPAX)</div>
+                            <div class="card-value">${gpaText || '-'}</div>
+                        </div>
                     </div>
                     <div class="progress-bar">
                         <div class="progress-fill" style="width:${data.progress}%">${data.progress}% (${data.totalAllCredits}/129)</div>
