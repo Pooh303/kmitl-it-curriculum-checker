@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Curriculum Checker</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <!-- Google Font - Kanit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Kanit', sans-serif;
+            /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #86bbff 0%, #0b48ff 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 2rem;
+        }
+        
+        .code-section {
+            margin-bottom: 3rem;
+        }
+        
+        .code-section h2 {
+            color: #667eea;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        
+        .code-container {
+            position: relative;
+            background: #1e1e1e;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .code-header {
+            background: #2d2d2d;
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #404040;
+        }
+        
+        .code-title {
+            color: #a0a0a0;
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+        
+        .copy-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Kanit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 400;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .copy-btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .copy-btn:active {
+            transform: translateY(0);
+        }
+        
+        .copy-btn.copied {
+            background: #48bb78;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border: none;
+            padding: 1.5rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            resize: vertical;
+            outline: none;
+            overflow: hidden;
+        }
+        
+        .instructions-section {
+            margin-top: 3rem;
+        }
+        
+        .instructions-section h2 {
+            color: #667eea;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .step {
+            background: #f7fafc;
+            border-left: 4px solid #667eea;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .step:hover {
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+            /* transform: translateX(5px); */
+        }
+        
+        .step h3 {
+            color: #2d3748;
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .step p {
+            color: #4a5568;
+            font-size: 1rem;
+            font-weight: 300;
+        }
+        
+        .step ul {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        .step ul li {
+            color: #4a5568;
+            font-weight: 300;
+            margin: 0.5rem 0;
+            line-height: 1.7;
+        }
+        
+        .step ul li strong {
+            color: #2d3748;
+            font-weight: 500;
+        }
+        
+        .screenshot {
+            width: 100%;
+            max-width: 100%;
+            min-height: 200px;
+            background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
+            border-radius: 8px;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #667eea;
+            font-size: 1.1rem;
+            border: 2px dashed #667eea;
+            overflow: hidden;
+        }
+        
+        .screenshot img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            border-radius: 8px;
+            display: block;
+        }
+        
+        .note {
+            background: #fef5e7;
+            border-left: 4px solid #f39c12;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+        
+        .note p {
+            color: #7d6608;
+            margin: 0;
+            font-weight: 400;
+        }
+        
+        code {
+            background: #f1f5f9;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #667eea;
+        }
+        
+        .step a {
+            display: inline-block;
+            color: #667eea;
+            text-decoration: none;
+            background: #f0f4ff;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            margin: 0.5rem 0;
+            font-weight: 400;
+            transition: all 0.3s ease;
+            border: 1px solid #d0d7ff;
+        }
+        
+        .step a:hover {
+            background: #667eea;
+            color: white;
+            /* transform: translateX(5px); */
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        .step a::before {
+            content: "🌐 ";
+            margin-right: 0.3rem;
+        }
+        
+        footer {
+            background: #2d3748;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            font-weight: 300;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 0.5rem;
+            }
+            
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            header p {
+                font-size: 0.95rem;
+            }
+            
+            .content {
+                padding: 1.5rem;
+            }
+            
+            .code-section h2,
+            .instructions-section h2 {
+                font-size: 1.5rem;
+            }
+            
+            .step h3 {
+                font-size: 1.1rem;
+            }
+            
+            textarea {
+                min-height: 300px;
+                font-size: 0.85rem;
+            }
+            
+            .copy-btn {
+                padding: 0.4rem 1rem;
+                font-size: 0.85rem;
+            }
+            
+            .screenshot {
+                height: 200px;
+                font-size: 0.95rem;
+                min-height: 150px;
+            }
+            
+            .screenshot img {
+                max-height: 400px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            header {
+                padding: 2rem 1rem;
+            }
+            
+            header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .code-header {
+                flex-direction: column;
+                gap: 0.75rem;
+                align-items: flex-start;
+            }
+            
+            .copy-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 KMITL IT Curriculum Checker</h1>
+            <p>สคริปต์ตรวจสอบความคืบหน้าการเรียนตามหลักสูตรเทคโนโลยีสารสนเทศ KMITL</p>
+        </header>
+        
+        <div class="content">
+            <!-- Code Section -->
+            <div class="code-section">
+                <h2>📦 ซอร์สโค้ด</h2>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span class="code-title">code.js</span>
+                        <button class="copy-btn" onclick="copyCode()">
+                            <span id="copyText">📋 คัดลอกโค้ด</span>
+                        </button>
+                    </div>
+                    <textarea id="codeArea" readonly>// กำลังโหลดโค้ด...</textarea>
+                </div>
+            </div>
+            
+            <!-- Instructions Section -->
+            <div class="instructions-section">
+                <h2>⚠️ ข้อควรทราบ</h2>
+                
+                <div class="note" style="background: #fff3cd; border-left-color: #ffc107;">
+                    <p><strong>🚫 Pop-up Blocker:</strong> สคริปต์นี้จะเปิดผลลัพธ์ในหน้าต่างใหม่ กรุณา <strong>อนุญาตการแสดง Pop-up</strong> จากเว็บไซต์ <code>reg.kmitl.ac.th</code> ในเบราว์เซอร์ของคุณ</p>
+                </div>
+                
+                <div class="note" style="background: #d1ecf1; border-left-color: #0c5460;">
+                    <p><strong>📚 ความถูกต้องของหลักสูตร:</strong> สคริปต์นี้ออกแบบมาสำหรับ<strong>หลักสูตรเทคโนโลยีสารสนเทศ (หลักสูตรปรับปรุง พ.ศ. 2560)</strong> ของสถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง หากมีการเปลี่ยนแปลงโครงสร้างหลักสูตร อาจต้องมีการอัปเดตโค้ดในอนาคต</p>
+                </div>
+                
+                <h2 style="margin-top: 2.5rem;">✨ คุณสมบัติหลัก</h2>
+                
+                <div class="step">
+                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem; color: #4a5568;">
+                        <li><strong>📊 Dashboard สรุปภาพรวม:</strong> แสดงผลหน่วยกิตรวม, หน่วยกิตที่เหลือ, และความคืบหน้าในการเรียนเป็นเปอร์เซ็นต์</li>
+                        <li><strong>✅ ตรวจสอบเงื่อนไขการจบหลักสูตร:</strong> วิเคราะห์และแสดงผลการเรียนตามโครงสร้างหลักสูตรอย่างละเอียด</li>
+                        <li><strong>🧠 ตรวจจับสายวิชาอัตโนมัติ:</strong> สามารถตรวจสอบได้ว่าคุณเรียนวิชาในสายใดเป็นหลัก และใช้เป็นเกณฑ์ในการคำนวณ</li>
+                        <li><strong>🤝 รองรับเงื่อนไขสหกิจศึกษา:</strong> หากคุณเรียนสหกิจศึกษา สคริปต์จะปรับลดหน่วยกิตวิชาเลือก IT ให้ตามเงื่อนไข</li>
+                        <li><strong>📅 แสดงผลแยกตามปีการศึกษา:</strong> จัดกลุ่มรายวิชาตามปีการศึกษาและเทอม สามารถคลิกเพื่อย่อ/ขยายดูรายละเอียดได้</li>
+                        <li><strong>🎨 หน้าตาสวยงามและโต้ตอบได้:</strong> ออกแบบมาให้อ่านง่าย สบายตา และใช้งานสะดวกกว่าหน้าเว็บต้นฉบับ</li>
+                    </ul>
+                </div>
+                
+                <h2 style="margin-top: 2.5rem;">📖 วิธีการใช้งาน</h2>
+                
+                <div class="step">
+                    <h3>ขั้นตอนที่ 1: เข้าสู่ระบบ reg.kmitl.ac.th</h3>
+                    <p>เปิดเบราว์เซอร์และเข้าสู่ระบบที่ <strong>reg.kmitl.ac.th</strong> ด้วยบัญชีนักศึกษาของคุณ</p>
+                    <a href="https://www.reg.kmitl.ac.th/index/" target="_blank">เข้าสู่ระบบ reg.kmitl</a>
+                    <div class="screenshot"><img src="assets/images/step1-login.png.png"></div>
+                </div>
+
+                <div class="step">
+                    <h3>ขั้นตอนที่ 2: ไปที่หน้าแสดงผลการเรียน Transcript</h3>
+                    <p>นำทางไปที่ หน้าหลักผู้ใช้ > ผลการเรียนทรานสคริปต์ > ทรานสคริปต์</p>
+                    <a href="https://www.reg.kmitl.ac.th/u_student/index.php" target="_blank">คลิกเปิดลิ้งก์</a>
+                    <div class="screenshot"><img src="assets/images/step2-navigate.png"></div>
+                </div>
+                
+                <div class="step">
+                    <h3>ขั้นตอนที่ 3: เปิด Developer Console</h3>
+                    <p>กดปุ่ม <strong>F12</strong> หรือคลิกขวาที่หน้าเว็บแล้วเลือก <strong>Inspect</strong> จากนั้นไปที่แท็บ <strong>Console</strong> และ ทำตามขั้นตอนดังรูป</p>
+                    <div class="screenshot"><img src="assets/images/step3-console.png"></div>
+                </div>
+                
+                <div class="step">
+                    <h3>ขั้นตอนที่ 4: วางโค้ดและรัน</h3>
+                    <p>คัดลอกโค้ดจากช่องด้านบน วางใน Console แล้วกด <strong>Enter</strong> สคริปต์จะทำงานและเปิดหน้าต่างแสดงผลลัพธ์</p>
+                    <div class="note">
+                        <p><strong>💡 เคล็ดลับ:</strong> หากหน้าต่างไม่เปิดขึ้น ให้ตรวจสอบว่าเบราว์เซอร์ไม่ได้บล็อก Pop-up</p>
+                    </div>
+                    <div class="screenshot"><img src="assets/images/step4-paste.png"></div>
+                </div>
+                
+        </div>
+        <div class="note">
+                        <p>ℹ️💁‍♂️ <strong>หากพบปัญหา</strong> หรือ <strong>บั๊กของโปรแกรม</strong> อย่าลังเลที่จะแจ้งให้เราทราบ ขอบคุณค้าบ 🙏</p>
+                    </div>
+        
+        <footer>
+            <p>© 2025 KMITL IT Curriculum Checker • สร้างด้วย ❤️ โดย Gemini, Claude และ นักศึกษา IT KMITL</p>
+        </footer>
+    </div>
+    
+    <script>
+        // ฟังก์ชันโหลด code.js
+        async function loadCode() {
+            try {
+                const response = await fetch('code.js');
+                if (!response.ok) {
+                    throw new Error('ไม่พบไฟล์ code.js');
+                }
+                const code = await response.text();
+                document.getElementById('codeArea').value = code;
+            } catch (error) {
+                document.getElementById('codeArea').value = 
+                    '// ไม่สามารถโหลดไฟล์ code.js ได้\n' +
+                    '// กรุณาตรวจสอบว่ามีไฟล์ code.js อยู่ใน root directory\n' +
+                    '// หรือสร้างไฟล์ code.js และวางโค้ดของคุณที่นี่\n\n' +
+                    '// ตัวอย่างโค้ด:\n' +
+                    'console.log("Hello, World!");\n\n' +
+                    'function example() {\n' +
+                    '    alert("นี่คือตัวอย่างโค้ด");\n' +
+                    '}';
+            }
+        }
+        
+        // ฟังก์ชันคัดลอกโค้ด
+        function copyCode() {
+            const codeArea = document.getElementById('codeArea');
+            const copyBtn = document.querySelector('.copy-btn');
+            const copyText = document.getElementById('copyText');
+            
+            codeArea.select();
+            codeArea.setSelectionRange(0, 99999);
+            
+            navigator.clipboard.writeText(codeArea.value).then(() => {
+                copyText.textContent = '✅ คัดลอกแล้ว!';
+                copyBtn.classList.add('copied');
+                
+                setTimeout(() => {
+                    copyText.textContent = '📋 คัดลอกโค้ด';
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+            }).catch(() => {
+                // สำรองสำหรับเบราว์เซอร์เก่า
+                document.execCommand('copy');
+                copyText.textContent = '✅ คัดลอกแล้ว!';
+                copyBtn.classList.add('copied');
+                
+                setTimeout(() => {
+                    copyText.textContent = '📋 คัดลอกโค้ด';
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+        
+        // โหลดโค้ดเมื่อหน้าเว็บพร้อม
+        window.addEventListener('load', loadCode);
+    </script>
+</body>
+</html>
