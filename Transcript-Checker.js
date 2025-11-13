@@ -1,15 +1,32 @@
 // This version without obfuscation is for development and debugging purposes.
 
 (function () {
-    // === ส่วนของการประกาศตัวแปรหลักที่ใช้ทั่วทั้งสคริปต์ ===
+    // === ส่วนของการประกาศตัวแปรหลักที่ใช้ทั้งสคริปต์ ===
     let popupWindow = null;
     let analysisData = {};
 
     // === ส่วนของการตั้งค่าข้อมูล (Configuration Data) ===
     const COURSE_NAMES = { '90641001': 'โรงเรียนสร้างเสน่ห์', '90641002': 'ความฉลาดทางดิจิทัล', '90641003': 'กีฬาและนันทนาการ', '90644007': 'ภาษาอังกฤษพื้นฐาน 1', '90644008': 'ภาษาอังกฤษพื้นฐาน 2', '90642033': 'กฎหมายสำหรับคนรุ่นใหม่', '90643021': 'ผู้ประกอบการสมัยใหม่', '90644042': 'การสื่อสารและการนำเสนออย่างมืออาชีพ', '06066000': 'คณิตศาสตร์ไม่ต่อเนื่อง', '06066001': 'ความน่าจะเป็นและสถิติ', '06016401': 'คณิตศาสตร์สำหรับเทคโนโลยีสารสนเทศ', '06016402': 'พื้นฐานทางด้านเทคโนโลยีสารสนเทศ', '06066100': 'การบริหารโครงการเทคโนโลยีสารสนเทศ', '06066101': 'พื้นฐานทางธุรกิจสำหรับเทคโนโลยีสารสนเทศ', '06066102': 'ระบบสารสนเทศเพื่อการจัดการ', '06016403': 'เทคโนโลยีสื่อประสม', '06016404': 'เทคโนโลยีกลุ่มเมฆ', '06016405': 'พื้นฐานความมั่นคงปลอดภัยไซเบอร์', '06016406': 'โครงงาน 1', '06016407': 'โครงงาน 2', '06066300': 'แนวคิดระบบฐานข้อมูล', '06066301': 'โครงสร้างข้อมูลและอัลกอริทึม', '06066302': 'การเขียนโปรแกรมเว็บพื้นฐาน', '06066304': 'การวิเคราะห์และออกแบบระบบสารสนเทศ', '06016408': 'การสร้างโปรแกรมเชิงวัตถุ', '06016409': 'การประมวลทางกายภาพ', '06016410': 'วิศวกรรมซอฟต์แวร์', '06066303': 'การแก้ปัญหาและการโปรแกรมคอมพิวเตอร์', '06016411': 'ระบบคอมพิวเตอร์เบื้องต้น', '06016412': 'โครงสร้างระบบคอมพิวเตอร์และระบบปฏิบัติการ', '06016413': 'ระบบเครือข่ายเบื้องต้น', '06016414': 'ระบบฐานข้อมูลแบบโนเอสคิวแอล', '06016415': 'การเขียนโปรแกรมเชิงฟังก์ชัน', '06016416': 'วิศวกรรมความต้องการ', '06016417': 'เครื่องมือและสภาพแวดล้อมสำหรับการพัฒนาซอฟต์แวร์', '06016418': 'การพัฒนาเว็บฝั่งเซิร์ฟเวอร์', '06016419': 'โครงสร้างพื้นฐานเครือข่ายการสื่อสาร', '06016420': 'ระบบโครงสร้างพื้นฐานและการบริการ', '06016421': 'ความมั่นคงปลอดภัยโครงสร้างพื้นฐานทางเทคโนโลยีสารสนเทศ', '06016422': 'อินเทอร์เน็ตของสรรพสิ่ง', '06016423': 'การออโตเมชั่นและโครงสร้างพื้นฐานที่สามารถโปรแกรมได้', '06016424': 'การออกแบบส่วนต่อประสานกับมนุษย์', '06016425': 'พื้นฐานการออกแบบทัศนศิลป์สำหรับสื่อปฏิสัมพันธ์', '06016426': 'คอมพิวเตอร์กราฟิกส์และแอนิเมชัน', '06016427': 'การออกแบบและพัฒนาเกมเบื้องต้น', '06016481': 'สหกิจศึกษา', '06016482': 'สหกิจศึกษาต่างประเทศ' };
+    const CAREER_MODULES = {
+        'M1: Full-Stack Web Developer': [
+            { code: '06016428', name: 'การพัฒนาและออกแบบโปรแกรมบริการแบบจุลภาค' },
+            { code: '06016429', name: 'การพัฒนาเว็บฝั่งไคลเอนต์' },
+            { code: '06016430', name: 'การพัฒนาคลาวด์แอปพลิเคชัน' },
+        ],
+        'M2: Network/System Engineer': [
+            { code: '06016439', name: 'เทคโนโลยีเครือข่ายไร้สาย' },
+            { code: '06016440', name: 'การออกแบบเครือข่ายสารสนเทศ' },
+            { code: '06016441', name: 'ประสิทธิภาพเครือข่ายและระบบ' },
+        ],
+        'M3: Game Developer': [
+            { code: '06016446', name: 'การออกแบบเกม' },
+            { code: '06016447', name: 'การพัฒนาเกมขั้นต้นด้วยเกมเอนจิ้น' },
+            { code: '06016448', name: 'การพัฒนาเกมขั้นสูงด้วยเกมเอนจิ้น' },
+        ]
+    };
     const CURRICULUM_REQUIREMENTS = {
         generalEducation: { total: 30, groups: { foundation: { name: 'กลุ่มพื้นฐาน', required: 6, courses: ['90641001', '90641002', '90641003'] }, language: { name: 'กลุ่มภาษาและการสื่อสาร', required: 9, courses: ['90644007', '90644008'], electivePrefix: '90644' }, faculty: { name: 'กลุ่มตามเกณฑ์คณะ', required: 9, courses: ['90642033', '90643021', '90644042'] }, generalElective: { name: 'กลุ่มเลือกศึกษาทั่วไป', required: 6, prefix: '9064' } } },
-        majorCourses: { total: 93, groups: { core: { name: 'กลุ่มวิชาแกน', required: 12, courses: ['06066000', '06066001', '06016401', '06016402'] }, organization: { name: 'กลุ่มองค์การและระบบสารสนเทศ', required: 9, courses: ['06066100', '06066101', '06066102'] }, technology: { name: 'กลุ่มเทคโนโลยีเพื่องานประยุกต์', required: 27, courses: ['06016403', '06016404', '06016405', '06016406', '06016407', '06066300', '06066301', '06066302', '06066304'] }, software: { name: 'กลุ่มเทคโนโลยีและวิธีการทางซอฟต์แวร์', required: 12, courses: ['06016408', '06016409', '06016410', '06066303'] }, infrastructure: { name: 'กลุ่มโครงสร้างพื้นฐานของระบบ', required: 9, courses: ['06016411', '06016412', '06016413'] }, specialization: { name: 'กลุ่มวิชาบังคับเฉพาะสาขา', required: 15, selectOne: true, tracks: { softwareDev: { name: 'การพัฒนาซอฟต์แวร์', courses: ['06016414', '06016415', '06016416', '06016417', '06016418'] }, infrastructure: { name: 'โครงสร้างพื้นฐาน IT', courses: ['06016419', '06016420', '06016421', '06016422', '06016423'] }, multimedia: { name: 'สื่อประสม เว็บ และเกม', courses: ['06016424', '06016425', '06016426', '06016427', '06016418'] } } }, itElective: { name: 'กลุ่มวิชาเลือกทางเทคโนโลยีสารสนเทศ', required: 9, prefix: '06016', rangeStart: '06016428', rangeEnd: '06016480' }, coop: { name: 'กลุ่มวิชาการศึกษาทางเลือก (สหกิจศึกษา)', optional: true, replaces: 'itElective', credits: 6, courses: ['06016481', '06016482'] } } },
+        majorCourses: { total: 93, groups: { core: { name: 'กลุ่มวิชาแกน', required: 12, courses: ['06066000', '06066001', '06016401', '06016402'] }, organization: { name: 'กลุ่มองค์การและระบบสารสนเทศ', required: 9, courses: ['06066100', '06066101', '06066102'] }, technology: { name: 'กลุ่มเทคโนโลยีเพื่องานประยุกต์', required: 27, courses: ['06016403', '06016404', '06016405', '06016406', '06016407', '06066300', '06066301', '06066302', '06066304'] }, software: { name: 'กลุ่มเทคโนโลยีและวิธีการทางซอฟต์แวร์', required: 12, courses: ['06016408', '06016409', '06016410', '06066303'] }, infrastructure: { name: 'กลุ่มโครงสร้างพื้นฐานของระบบ', required: 9, courses: ['06016411', '06016412', '06016413'] }, specialization: { name: 'กลุ่มวิชาบังคับเฉพาะสาขา', required: 15, selectOne: true, tracks: { softwareDev: { name: 'ซอฟแวร์เอ็นจิเนียร์ 🧑‍💻', courses: ['06016414', '06016415', '06016416', '06016417', '06016418'] }, infrastructure: { name: 'เน็ตเวิร์ค 🛜', courses: ['06016419', '06016420', '06016421', '06016422', '06016423'] }, multimedia: { name: 'มัลติมีเดีย 🎮', courses: ['06016424', '06016425', '06016426', '06016427', '06016418'] } } }, itElective: { name: 'กลุ่มวิชาเลือกทางเทคโนโลยีสารสนเทศ', required: 9, prefix: '06016', rangeStart: '06016428', rangeEnd: '06016480' }, coop: { name: 'กลุ่มวิชาการศึกษาทางเลือก (สหกิจศึกษา)', optional: true, replaces: 'itElective', credits: 6, courses: ['06016481', '06016482'] } } },
         freeElective: { name: 'ค. หมวดวิชาเลือกเสรี', required: 6 }
     };
 
@@ -199,7 +216,7 @@
                     const missingIndex = missingCourses.indexOf(code);
                     if (missingIndex > -1) missingCourses.splice(missingIndex, 1);
                     if (isPassingGrade(subject.grade)) {
-                        takenCourses.push(subject); earnedCredits += subject.credit; usedCourses.add(subject.code);
+                        takenCourses.push(subject); earnedCredits += parseInt(subject.credit, 10) || 0; usedCourses.add(subject.code);
                     } else if (isPendingGrade(subject.grade)) { pendingCourses.push(subject); }
                 }
             });
@@ -213,25 +230,77 @@
         allSubjects.filter(s => s.code.startsWith(genEdGroups.language.electivePrefix) && !usedCourses.has(s.code)).forEach(s => {
             if (langElecNeeded > 0) {
                 if (isPassingGrade(s.grade)) {
-                    langElecGroup.takenCourses.push(s); langElecGroup.earnedCredits += s.credit; usedCourses.add(s.code); langElecNeeded -= s.credit;
+                    langElecGroup.takenCourses.push(s); langElecGroup.earnedCredits += parseInt(s.credit, 10) || 0; usedCourses.add(s.code); langElecNeeded -= (parseInt(s.credit, 10) || 0);
                 } else if (isPendingGrade(s.grade)) {
-                    langElecGroup.pendingCourses.push(s); langElecNeeded -= s.credit;
+                    langElecGroup.pendingCourses.push(s); langElecNeeded -= (parseInt(s.credit, 10) || 0);
                 }
             }
         });
 
+        // Helper function to find a combination of courses that sums to a target
+        function findCombinationForSum(courses, target) {
+            // recursive helper
+            function find(index, currentSum, combination) {
+                if (currentSum === target) {
+                    return combination;
+                }
+                if (currentSum > target || index >= courses.length) {
+                    return null;
+                }
+                // Try including the current course
+                const withCurrent = find(index + 1, currentSum + (parseInt(courses[index].credit, 10) || 0), [...combination, courses[index]]);
+                if (withCurrent) return withCurrent;
+                
+                // Try excluding the current course
+                const withoutCurrent = find(index + 1, currentSum, combination);
+                if (withoutCurrent) return withoutCurrent;
+
+                return null;
+            }
+            return find(0, 0, []);
+        }
+
         // General Elective (6 credits)
         const genElecGroup = { name: genEdGroups.generalElective.name, required: 6, takenCourses: [], pendingCourses: [], earnedCredits: 0, missingCourses: [] };
-        let genElecNeeded = 6;
-        allSubjects.filter(s => s.code.startsWith(genEdGroups.generalElective.prefix) && !usedCourses.has(s.code)).forEach(s => {
-            if (genElecNeeded > 0) {
-                if (isPassingGrade(s.grade)) {
-                    genElecGroup.takenCourses.push(s); genElecGroup.earnedCredits += s.credit; usedCourses.add(s.code); genElecNeeded -= s.credit;
-                } else if (isPendingGrade(s.grade)) {
-                    genElecGroup.pendingCourses.push(s); genElecNeeded -= s.credit;
+        
+        // Step 1: Find all possible candidates for this group (passed courses)
+        const genElecCandidates = allSubjects.filter(s => 
+            s.code.startsWith(genEdGroups.generalElective.prefix) && 
+            !usedCourses.has(s.code) && 
+            isPassingGrade(s.grade)
+        );
+
+        // Step 2: Try to find the "perfect" combination that sums to exactly 6
+        const perfectCombination = findCombinationForSum(genElecCandidates, 6);
+
+        if (perfectCombination) {
+            // Step 3a: If a perfect combination is found, use it.
+            perfectCombination.forEach(s => {
+                genElecGroup.takenCourses.push(s);
+                genElecGroup.earnedCredits += parseInt(s.credit, 10) || 0;
+                usedCourses.add(s.code);
+            });
+        } else {
+            // Step 3b: If no perfect fit, fall back to the old "greedy" logic.
+            // This ensures the student still passes if they have enough credits, e.g., 7 credits (4+3).
+            let genElecNeededFallback = 6;
+            // Sort candidates to make the greedy choice more predictable (e.g., larger credits first)
+            genElecCandidates.sort((a, b) => (parseInt(b.credit, 10) || 0) - (parseInt(a.credit, 10) || 0));
+            
+            genElecCandidates.forEach(s => {
+                if (genElecNeededFallback > 0) {
+                    genElecGroup.takenCourses.push(s);
+                    genElecGroup.earnedCredits += parseInt(s.credit, 10) || 0;
+                    usedCourses.add(s.code);
+                    genElecNeededFallback -= (parseInt(s.credit, 10) || 0);
                 }
-            }
-        });
+            });
+        }
+
+        // Handle pending courses separately so they don't interfere with the combination logic
+        allSubjects.filter(s => s.code.startsWith(genEdGroups.generalElective.prefix) && !usedCourses.has(s.code) && isPendingGrade(s.grade))
+            .forEach(s => genElecGroup.pendingCourses.push(s));
+
         result.generalEducation.groups.generalElective = genElecGroup;
 
         // 3. Finalize GenEd status
@@ -245,7 +314,7 @@
 
         // --- B. Major Courses ---
         const majorGroups = CURRICULUM_REQUIREMENTS.majorCourses.groups;
-        // 1. Process simple required groups
+        // 1. Process required groups
         ['core', 'organization', 'technology', 'software', 'infrastructure'].forEach(key => {
             const group = majorGroups[key];
             const takenCourses = [], pendingCourses = [], missingCourses = [...group.courses];
@@ -256,7 +325,7 @@
                     const missingIndex = missingCourses.indexOf(code);
                     if (missingIndex > -1) missingCourses.splice(missingIndex, 1);
                     if (isPassingGrade(subject.grade)) {
-                        takenCourses.push(subject); earnedCredits += subject.credit; usedCourses.add(subject.code);
+                        takenCourses.push(subject); earnedCredits += parseInt(subject.credit, 10) || 0; usedCourses.add(subject.code);
                     } else if (isPendingGrade(subject.grade)) { pendingCourses.push(subject); }
                 }
             });
@@ -274,29 +343,29 @@
             let earned = 0;
             track.courses.forEach(code => {
                 const subject = allSubjects.find(s => s.code === code && isPassingGrade(s.grade));
-                if (subject) earned += subject.credit;
+                if (subject) earned += parseInt(subject.credit, 10) || 0;
             });
             trackResults[trackKey] = { earned };
             if (earned > maxCredits) { maxCredits = earned; bestTrackKey = trackKey; }
         });
 
         const primaryTrack = trackGroup.tracks[bestTrackKey];
-        const takenCourses = [], pendingCourses = [], missingCourses = [...primaryTrack.courses];
-        let earnedCredits = 0;
+        const takenCourses_spec = [], pendingCourses_spec = [], missingCourses_spec = [...primaryTrack.courses];
+        let earnedCredits_spec = 0;
         primaryTrack.courses.forEach(code => {
             const subject = allSubjects.find(s => s.code === code);
             if (subject) {
-                const missingIndex = missingCourses.indexOf(code);
-                if (missingIndex > -1) missingCourses.splice(missingIndex, 1);
+                const missingIndex = missingCourses_spec.indexOf(code);
+                if (missingIndex > -1) missingCourses_spec.splice(missingIndex, 1);
                 if (isPassingGrade(subject.grade)) {
-                    takenCourses.push(subject); earnedCredits += subject.credit; usedCourses.add(subject.code);
-                } else if (isPendingGrade(subject.grade)) { pendingCourses.push(subject); }
+                    takenCourses_spec.push(subject); earnedCredits_spec += parseInt(subject.credit, 10) || 0; usedCourses.add(subject.code);
+                } else if (isPendingGrade(subject.grade)) { pendingCourses_spec.push(subject); }
             }
         });
-        totalCreditsUsedInRequirements += earnedCredits;
-        result.majorCourses.groups.specialization = { name: trackGroup.name, required: trackGroup.required, earnedCredits, takenCourses, pendingCourses, missingCourses: missingCourses.map(code => ({ code, name: allSubjects.find(s => s.code === code)?.name || COURSE_NAMES[code] })), status: getStatus(earnedCredits, trackGroup.required, pendingCourses, missingCourses), remaining: Math.max(0, trackGroup.required - earnedCredits), note: `(Track หลัก: ${primaryTrack.name})` };
+        totalCreditsUsedInRequirements += earnedCredits_spec;
+        result.majorCourses.groups.specialization = { name: trackGroup.name, required: trackGroup.required, earnedCredits: earnedCredits_spec, takenCourses: takenCourses_spec, pendingCourses: pendingCourses_spec, missingCourses: missingCourses_spec.map(code => ({ code, name: allSubjects.find(s => s.code === code)?.name || COURSE_NAMES[code] })), status: getStatus(earnedCredits_spec, trackGroup.required, pendingCourses_spec, missingCourses_spec), remaining: Math.max(0, trackGroup.required - earnedCredits_spec), note: `- แขนงหลัก: ${primaryTrack.name}` };
 
-        // 3. Process Co-op and IT Electives
+        // 3. Process Co-op
         const coopGroup = majorGroups.coop;
         const hasCoop = allSubjects.some(s => coopGroup.courses.includes(s.code) && isPassingGrade(s.grade));
         if (hasCoop) {
@@ -306,6 +375,7 @@
             result.majorCourses.groups.coop = { name: coopGroup.name, required: 6, earnedCredits: 6, status: 'passed', takenCourses: [coopSubject], pendingCourses: [], missingCourses: [] };
         }
 
+        // 4. Process IT Electives
         const itElecGroup = majorGroups.itElective;
         const requiredItElectiveCredits = hasCoop ? 3 : 9;
         const itElecTaken = [], itElecPending = [];
@@ -317,9 +387,10 @@
             const isInRange = codeNum >= parseInt(itElecGroup.rangeStart) && codeNum <= parseInt(itElecGroup.rangeEnd);
             if (isInRange && itElecNeeded > 0) {
                 if (isPassingGrade(s.grade)) {
-                    itElecTaken.push(s); itElecEarned += s.credit; usedCourses.add(s.code); itElecNeeded -= s.credit;
+                    const credit = parseInt(s.credit, 10) || 0;
+                    itElecTaken.push(s); itElecEarned += credit; usedCourses.add(s.code); itElecNeeded -= credit;
                 } else if (isPendingGrade(s.grade)) {
-                    itElecPending.push(s); itElecNeeded -= s.credit;
+                    itElecPending.push(s); itElecNeeded -= (parseInt(s.credit, 10) || 0);
                 }
             }
         });
@@ -334,10 +405,29 @@
             s => isPassingGrade(s.grade) && !usedCourses.has(s.code)
         );
         result.freeElective = { name: CURRICULUM_REQUIREMENTS.freeElective.name, required: freeReq, earned: freeElectiveCredits, status: freeElectiveCredits >= freeReq ? 'passed' : 'failed', remaining: Math.max(0, freeReq - freeElectiveCredits),takenCourses: takenFreeElective, };
-
+        
+        const careerModulesResult = {};
+        Object.entries(CAREER_MODULES).forEach(([moduleName, courses]) => {
+            const result = { name: moduleName, total: courses.length, passed: 0, pending: 0, missing: [], list: [] };
+            courses.forEach(c => {
+                const subj = allSubjects.find(s => s.code === c.code);
+                if (subj) {
+                    if (isPassingGrade(subj.grade)) { result.passed += 1; }
+                    else if (isPendingGrade(subj.grade)) { result.pending += 1; }
+                    else { result.missing.push(c); }
+                    result.list.push({ ...c, grade: subj.grade });
+                } else {
+                    result.missing.push(c);
+                    result.list.push({ ...c, grade: null });
+                }
+            });
+            careerModulesResult[moduleName] = result;
+        });
+        result.careerModules = careerModulesResult;
+        
         return result;
     }
-
+    
     // === HTML Generation Functions ===
     function createPopupHTML(data) {
         const semestersByYear = {};
@@ -444,22 +534,21 @@
                     --warning-bg: #FEF3C7; --warning-text: #92400E;
                     --pending-bg: #FEF9C3; --pending-text: #92400E; --pending-border: #F59E0B;
                     --fail-bg: #FEE2E2; --fail-text: #991B1B; --fail-border: #EF4444;
+                    --info-bg: #DBEAFE;
+                    --info-text: #1E40AF;
+                    --info-border: #60A5FA;
                 }
                 body { 
                     font-family: 'Kanit', sans-serif; background-color: var(--background-color); 
                     padding: 2rem; color: var(--text-primary); font-weight: 300;
-                    /* --- START: SCROLLBAR FIX --- */
                     overflow-y: scroll !important;
                     overflow-x: hidden !important;
-                    /* --- END: SCROLLBAR FIX --- */
                 }
                 .container {
                     max-width: 1200px; margin: auto; background: var(--card-bg);
                     border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 10px 10px -5px rgba(0,0,0,0.04);
                     border: 1px solid var(--border-color);
-                    /* --- START: CORNER RADIUS FIX --- */
                     overflow: hidden;
-                    /* --- END: CORNER RADIUS FIX --- */
                 }
                 .header { background-color: var(--primary-color); color: white; padding: 2rem; text-align: center; }
                 h1, h2, h3, h4 { margin: 0; font-weight: 500; }
@@ -528,6 +617,38 @@
                 .courses-detail ul { margin: 5px 0 0 20px; padding: 0; list-style-type: '✓  '; }
                 .courses-detail.missing ul { color: var(--fail-text); list-style-type: '✗  '; }
                 .courses-detail.pending ul { color: var(--pending-text); list-style-type: '... '; }
+                .requirement-group.module-info {
+                    border-left-color: var(--info-border);
+                    background-color: var(--info-bg);
+                }
+                .requirement-status.status-info {
+                    background-color: var(--info-border);
+                    color: white;
+                }
+                .courses-detail ul li .icon-pass {
+                    color: var(--success-text);
+                    font-weight: 600;
+                    margin-right: 8px;
+                }
+                .courses-detail ul li .icon-fail {
+                    color: var(--fail-text);
+                    font-weight: 600;
+                    margin-right: 8px;
+                }
+                .courses-detail ul li .icon-pending {
+                    color: var(--pending-text);
+                    font-weight: 600;
+                    margin-right: 8px;
+                }
+                .module-info .courses-detail ul {
+                    list-style-type: none;
+                    margin-left: 5px;
+                }
+                .requirement-title .requirement-note {
+                    font-weight: 400;
+                    color: var(--text-secondary);
+                    font-size: 0.95em;
+                }
             </style>
         </head>
         <body>
@@ -589,6 +710,38 @@
         Object.values(check.majorCourses?.groups || {}).forEach(g => { html += createGroupHTML(g); });
         html += `<h4 style="color:#3B82F6; margin:30px 0 10px 0;">${check.freeElective.name}</h4>`;
         html += createGroupHTML(check.freeElective);
+
+        if (check.careerModules) {
+        html += `<h4 style="color:#3B82F6; margin:30px 0 10px 0;">โมดูลอาชีพ (Optional)</h4>`;
+        Object.values(check.careerModules).forEach(mod => {
+            html += `<div class="requirement-group module-info">
+                <div class="requirement-header">
+                    <div class="requirement-title">${mod.name}</div>
+                    <div class="requirement-status status-info">
+                        ${mod.passed} / ${mod.total} วิชา 
+                    </div>
+                </div>
+                <div class="courses-detail">
+                    <strong>รายละเอียด:</strong>
+                    <ul>
+                    ${mod.list.map(c => {
+                        let prefixIcon = '';
+                        if (isPassingGrade(c.grade)) {
+                            prefixIcon = '<span class="icon-pass">✓</span>';
+                        } else if (isPendingGrade(c.grade)) {
+                            prefixIcon = '<span class="icon-pending">...</span>';
+                        } else {
+                            prefixIcon = '<span class="icon-fail">✗</span>';
+                        }
+                        return `<li>${prefixIcon} ${c.code} - ${c.name}</li>`;
+
+                    }).join('')}
+                    </ul>
+                </div>
+            </div>`;
+        });
+    }
+
         html += '</div></div>';
         return html;
     }
@@ -601,7 +754,8 @@
         const statusInfo = getStatusInfo(g.status);
         return `<div class="requirement-group ${g.status}">
             <div class="requirement-header">
-                <div class="requirement-title">${g.name} ${g.note || ''}</div>
+                <div class="requirement-title">
+                ${g.name} ${g.note ? `<span class="requirement-note">${g.note}</span>` : ''}</div>
                 <div class="requirement-status status-${statusInfo.class}">${statusInfo.text}</div>
             </div>
             <div class="requirement-details">
