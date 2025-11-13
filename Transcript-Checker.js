@@ -26,7 +26,7 @@
     };
     const CURRICULUM_REQUIREMENTS = {
         generalEducation: { total: 30, groups: { foundation: { name: 'กลุ่มพื้นฐาน', required: 6, courses: ['90641001', '90641002', '90641003'] }, language: { name: 'กลุ่มภาษาและการสื่อสาร', required: 9, courses: ['90644007', '90644008'], electivePrefix: '90644' }, faculty: { name: 'กลุ่มตามเกณฑ์คณะ', required: 9, courses: ['90642033', '90643021', '90644042'] }, generalElective: { name: 'กลุ่มเลือกศึกษาทั่วไป', required: 6, prefix: '9064' } } },
-        majorCourses: { total: 93, groups: { core: { name: 'กลุ่มวิชาแกน', required: 12, courses: ['06066000', '06066001', '06016401', '06016402'] }, organization: { name: 'กลุ่มองค์การและระบบสารสนเทศ', required: 9, courses: ['06066100', '06066101', '06066102'] }, technology: { name: 'กลุ่มเทคโนโลยีเพื่องานประยุกต์', required: 27, courses: ['06016403', '06016404', '06016405', '06016406', '06016407', '06066300', '06066301', '06066302', '06066304'] }, software: { name: 'กลุ่มเทคโนโลยีและวิธีการทางซอฟต์แวร์', required: 12, courses: ['06016408', '06016409', '06016410', '06066303'] }, infrastructure: { name: 'กลุ่มโครงสร้างพื้นฐานของระบบ', required: 9, courses: ['06016411', '06016412', '06016413'] }, specialization: { name: 'กลุ่มวิชาบังคับเฉพาะสาขา', required: 15, selectOne: true, tracks: { softwareDev: { name: 'ซอฟแวร์เอ็นจิเนียร์ 🧑‍💻', courses: ['06016414', '06016415', '06016416', '06016417', '06016418'] }, infrastructure: { name: 'เน็ตเวิร์ค 🛜', courses: ['06016419', '06016420', '06016421', '06016422', '06016423'] }, multimedia: { name: 'มัลติมีเดีย 🎮', courses: ['06016424', '06016425', '06016426', '06016427', '06016418'] } } }, itElective: { name: 'กลุ่มวิชาเลือกทางเทคโนโลยีสารสนเทศ', required: 9, prefix: '06016', rangeStart: '06016428', rangeEnd: '06016480' }, coop: { name: 'กลุ่มวิชาการศึกษาทางเลือก (สหกิจศึกษา)', optional: true, replaces: 'itElective', credits: 6, courses: ['06016481', '06016482'] } } },
+        majorCourses: { total: 93, groups: { core: { name: 'กลุ่มวิชาแกน', required: 12, courses: ['06066000', '06066001', '06016401', '06016402'] }, organization: { name: 'กลุ่มองค์การและระบบสารสนเทศ', required: 9, courses: ['06066100', '06066101', '06066102'] }, technology: { name: 'กลุ่มเทคโนโลยีเพื่องานประยุกต์', required: 27, courses: ['06016403', '06016404', '06016405', '06016406', '06016407', '06066300', '06066301', '06066302', '06066304'] }, software: { name: 'กลุ่มเทคโนโลยีและวิธีการทางซอฟต์แวร์', required: 12, courses: ['06016408', '06016409', '06016410', '06066303'] }, infrastructure: { name: 'กลุ่มโครงสร้างพื้นฐานของระบบ', required: 9, courses: ['06016411', '06016412', '06016413'] }, specialization: { name: 'กลุ่มวิชาบังคับเฉพาะสาขา', required: 15, selectOne: true, tracks: { softwareDev: { name: '🧑‍💻 ซอฟต์แวร์เอ็นจิเนียร์', courses: ['06016414', '06016415', '06016416', '06016417', '06016418'] }, infrastructure: { name: '🛜 เน็ตเวิร์ค', courses: ['06016419', '06016420', '06016421', '06016422', '06016423'] }, multimedia: { name: '🎮 มัลติมีเดีย', courses: ['06016424', '06016425', '06016426', '06016427', '06016418'] } } }, itElective: { name: 'กลุ่มวิชาเลือกทางเทคโนโลยีสารสนเทศ', required: 9, prefix: '06016', rangeStart: '06016428', rangeEnd: '06016480' }, coop: { name: 'กลุ่มวิชาการศึกษาทางเลือก (สหกิจศึกษา)', optional: true, replaces: 'itElective', credits: 6, courses: ['06016481', '06016482'] } } },
         freeElective: { name: 'ค. หมวดวิชาเลือกเสรี', required: 6 }
     };
 
@@ -217,7 +217,7 @@
                     if (missingIndex > -1) missingCourses.splice(missingIndex, 1);
                     if (isPassingGrade(subject.grade)) {
                         takenCourses.push(subject); earnedCredits += parseInt(subject.credit, 10) || 0; usedCourses.add(subject.code);
-                    } else if (isPendingGrade(subject.grade)) { pendingCourses.push(subject); }
+                    } else if (isPendingGrade(subject.grade)) { pendingCourses.push(subject); usedCourses.add(subject.code);}
                 }
             });
             result.generalEducation.groups[key] = { takenCourses, pendingCourses, earnedCredits, missingCourses: missingCourses.map(code => ({ code, name: allSubjects.find(s => s.code === code)?.name || COURSE_NAMES[code] })) };
@@ -326,7 +326,7 @@
                     if (missingIndex > -1) missingCourses.splice(missingIndex, 1);
                     if (isPassingGrade(subject.grade)) {
                         takenCourses.push(subject); earnedCredits += parseInt(subject.credit, 10) || 0; usedCourses.add(subject.code);
-                    } else if (isPendingGrade(subject.grade)) { pendingCourses.push(subject); }
+                    } else if (isPendingGrade(subject.grade)) { pendingCourses.push(subject); usedCourses.add(subject.code);}
                 }
             });
             const status = getStatus(earnedCredits, group.required, pendingCourses, missingCourses);
@@ -359,7 +359,7 @@
                 if (missingIndex > -1) missingCourses_spec.splice(missingIndex, 1);
                 if (isPassingGrade(subject.grade)) {
                     takenCourses_spec.push(subject); earnedCredits_spec += parseInt(subject.credit, 10) || 0; usedCourses.add(subject.code);
-                } else if (isPendingGrade(subject.grade)) { pendingCourses_spec.push(subject); }
+                } else if (isPendingGrade(subject.grade)) { pendingCourses_spec.push(subject); usedCourses.add(subject.code);}
             }
         });
         totalCreditsUsedInRequirements += earnedCredits_spec;
